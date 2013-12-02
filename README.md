@@ -7,7 +7,7 @@ Parse, tokenize et réindente un code source. Version beta, l'explication qui su
 Comment l'utiliser
 ------------------
 ```python
->>> from indent import scanner_from
+>>> from scanner import scanner_from
 >>> xml = "<body><section1><title>Foo<em>Title</title>Bar</em></section1></body>"
 >>> scanner = scanner_from('xml')
 >>> result = scanner.indent(xml, indentation='****')
@@ -46,7 +46,7 @@ Pourquoi ce programme ?
 -----------------------
 Pour réindenter du code "sale". Il existe une multitude de programme qui permettent de réindenter, par exemple, du xml. Mais il y en a peu qui permettent de réindenter du code xml invalide, sans modifier le code. De plus, il garde les retours à la ligne initiaux.
 Et il me faut aussi un code qui permettent de rajouter et de mixer rapidement le support d'autres langages.
-Ce programme n'a pas pour but de valider un quelconque code, ou de se substituer à un compilateur, ce n'est pas son but. Gardons les choses simples et stupide !
+Ce programme n'a pas pour but de valider un quelconque code, ou de se substituer à un tokenizer plus avancé comme pyparser, ce n'est pas son but. Gardons les choses simples et stupide !
 
 
 
