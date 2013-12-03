@@ -2,6 +2,7 @@ Sublime4Space
 =============
 
 Parse, tokenize et réindente un code source. Version beta, l'explication qui suit sera revu et complété.
+Testé uniquement avec python2.7 pour le moment.
 
 
 Comment l'utiliser
@@ -96,3 +97,11 @@ XML_GRAMMAR = {
     TextToken : serialize_text,
 }
 ```
+
+
+
+Sources
+-------
+http://stackoverflow.com/a/2359619/2719274 : Ça a été mon point de départ pour parser du code. Et le coeur du programme est construit à peu près pareil.
+http://docs.python.org/3.2/library/re.html#writing-a-tokenizer : Fourni dans le lien plus haut, c'est surtout celui-ci que j'ai lu le plus, vu qu'il est dans la doc python.
+Et plein d'autres, mais je ne les ai pas bookmarké, désolé...
