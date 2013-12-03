@@ -2,14 +2,13 @@
 # -*- coding: utf-8 -*-
 """
 Les tokens de base utilisés pour indenter un code.
-
-Ce module a été spécialement conçu pour ne pas avoir de dépendances externes.
 """
 from __future__ import unicode_literals, print_function, division
 
 
 __author__ = "Serge Kilimoff-Goriatchkine"
 __email__ = "serge.kilimoff@gmail.com"
+__license__ = 'MIT license'
 
 
 
@@ -171,3 +170,30 @@ class WhitespaceToken(BlockToken):
 class TextToken(Token):
     def hierarchise(self, token):
         self.preceding.hierarchise(token)
+
+
+
+def subclassing_from_grammar(cls, grammar_rule):
+    """
+    Crée dynamiquement une nouvelle classe par héritage de la classe `cls`.
+    Sa propriété __unicode__ sera surchargé par `wrap__unicode__`, qui appelera `grammar_rule`.
+    Si `grammar_rule` retourne None, alors la fonction `__unicode__` de la classe parente sera appelé.
+
+    PARAMETERS
+    ==========
+    cls : Token
+        Une classe ayant les propriétés de la classe `Token`.
+
+    grammar_rule : callable
+        Une fonction. Elle devra avoir en argument le mot clé `self` car elle sera une méthode d'instance.
+    """
+    def wrap__unicode__(token):
+        result = grammar_rule(token)
+        if result is None:
+            return super(token.__class__, token).__unicode__()
+        return result
+    cls_name = '%s__with_rule_%s' % (cls.__name__, grammar_rule.__name__)
+    cls_dict = dict(**cls.__dict__)
+    cls_dict['__unicode__'] = wrap__unicode__
+    print(wrap__unicode__)
+    return type(cls_name.encode('utf-8'), (cls,), cls_dict)

@@ -5,10 +5,11 @@ DOC
 """
 from __future__ import unicode_literals, print_function, division
 import re
-from indent_tokens import RootToken, TextToken
+from indent_tokens import RootToken, TextToken, subclassing_from_grammar
 
 __author__ = "Serge Kilimoff-Goriatchkine"
 __email__ = "serge.kilimoff@gmail.com"
+__license__ = 'MIT license'
 
 
 
@@ -73,33 +74,33 @@ class Scanner(object):
             pattern += "|(?P<%s>%s)" % (uid_tokenizer, regex)
             grammar_rule = grammar_rules.get(tokenizer, None)
             if grammar_rule:
-                tokenizer = self.subclassing_from_grammar(tokenizer, grammar_rule)
+                tokenizer = subclassing_from_grammar(tokenizer, grammar_rule)
             self.tokenizers[uid_tokenizer] = tokenizer
 
         self.lexicon = re.compile(pattern.strip('|'), *(re_flags or list()))
         text_grammar_rule = grammar_rules.get(text_node, None)
         if text_grammar_rule:
-            text_node = self.subclassing_from_grammar(text_node, text_grammar_rule)
+            text_node = subclassing_from_grammar(text_node, text_grammar_rule)
         self.text_node = text_node
 
 
-    def subclassing_from_grammar(self, cls, grammar_rule):
-        """
-        Crée dynamiquement une nouvelle classe par héritage de la classe `cls`.
-        Sa propriété __unicode__ sera surchargé par `grammar_rule`.
+    # def subclassing_from_grammar(self, cls, grammar_rule):
+    #     """
+    #     Crée dynamiquement une nouvelle classe par héritage de la classe `cls`.
+    #     Sa propriété __unicode__ sera surchargé par `grammar_rule`.
 
-        PARAMETERS
-        ==========
-        cls : Token
-            Une classe ayant les propriétés de la classe `Token`.
+    #     PARAMETERS
+    #     ==========
+    #     cls : Token
+    #         Une classe ayant les propriétés de la classe `Token`.
 
-        grammar_rule : callable
-            Une fonction. Elle devra avoir en argument le mot clé `self` car elle sera une méthode d'instance.
-        """
-        cls_name = '%s__with_rule_%s' % (cls.__name__, grammar_rule.__name__)
-        cls_dict = dict(**cls.__dict__)
-        cls_dict['__unicode__'] = grammar_rule
-        return type(cls_name.encode('utf-8'), (cls,), cls_dict)
+    #     grammar_rule : callable
+    #         Une fonction. Elle devra avoir en argument le mot clé `self` car elle sera une méthode d'instance.
+    #     """
+    #     cls_name = '%s__with_rule_%s' % (cls.__name__, grammar_rule.__name__)
+    #     cls_dict = dict(**cls.__dict__)
+    #     cls_dict['__unicode__'] = grammar_rule
+    #     return type(cls_name.encode('utf-8'), (cls,), cls_dict)
 
 
     def parse(self, string):

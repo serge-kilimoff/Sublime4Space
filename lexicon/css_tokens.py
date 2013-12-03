@@ -9,6 +9,7 @@ from indent_tokens import OpenToken, CloseToken, BlockToken, InlineToken, Whites
 
 __author__ = "Serge Kilimoff-Goriatchkine"
 __email__ = "serge.kilimoff@gmail.com"
+__license__ = 'MIT license'
 
 
 CSS_LEXICON = {

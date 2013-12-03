@@ -7,7 +7,7 @@ Parse, tokenize et réindente un code source. Version beta, l'explication qui su
 Comment l'utiliser
 ------------------
 ```python
->>> from indent import scanner_from
+>>> from scanner import scanner_from
 >>> xml = "<body><section1><title>Foo<em>Title</title>Bar</em></section1></body>"
 >>> scanner = scanner_from('xml')
 >>> result = scanner.indent(xml, indentation='****')
@@ -46,16 +46,18 @@ Pourquoi ce programme ?
 -----------------------
 Pour réindenter du code "sale". Il existe une multitude de programme qui permettent de réindenter, par exemple, du xml. Mais il y en a peu qui permettent de réindenter du code xml invalide, sans modifier le code. De plus, il garde les retours à la ligne initiaux.
 Et il me faut aussi un code qui permettent de rajouter et de mixer rapidement le support d'autres langages.
-Ce programme n'a pas pour but de valider un quelconque code, ou de se substituer à un compilateur, ce n'est pas son but. Gardons les choses simples et stupide !
+Ce programme n'a pas pour but de valider un quelconque code, ou de se substituer à un tokeniser plus avancé comme pyparser, ce n'est pas son but. Gardons les choses simples et stupide !
+De plus, cela facilite le debug pour, par exemple, une validation DTD d'un xml. Il est toujours un peu fastidieux de rechercher la position d'un caractère plutôt que le numéro d'une ligne, dans le cas d'un xml inline.
 
 
 
 Comment ajouter le support d'un nouveau langage ?
 -------------------------------------------------
 En définissant dans un premier temps les regex qui permettront de tokeniser le code. Puis de définir, si besoin, les règles de grammaire qui lieront ces tokens. Ces règles de grammaire sont uniquement là pour définir les indentations, rien d'autres.
-Exemple avec le xml : 
+Exemple avec le xml :
 ```python
 # Définit les règles de tokenisation du xml. Les regexp sont associés à des classes de token.
+# Pour le moment, ce sont des regexp basiques.
 XML_LEXICON = {
     r"\s*\n+\s*" : WhitespaceToken,
     r"<[^/!][^>]*[^/]?>" : OpenToken,
@@ -66,11 +68,13 @@ XML_LEXICON = {
     r"<!DOCTYPE.*?>" : BlockToken,
 }
 
-# Définit les règles de grammaire. Chaque classe de token lié plus haut est associé à une fonction qui permettra son indentation. L'API est pour le moment un peu en chantier, les appels à __unicode__ risque de disparaitre.
+# Définit les règles de grammaire.
+# Chaque classe de token lié plus haut est associé à une fonction qui permettra son indentation.
+# Si une règle de grammaire retourne None, alors la fonction __unicode__ de la classe parente est
+# automatiquement appelé.
 def serialize_open_tag(token):
     if isinstance(token.preceding, TextToken):
         return token.data
-    return super(token.__class__, token).__unicode__()
 
 
 def serialize_close_tag(token):
@@ -78,13 +82,11 @@ def serialize_close_tag(token):
         return token.data
     if isinstance(token.preceding, TextToken):
         return token.data
-    return super(token.__class__, token).__unicode__()
 
 
 def serialize_text(token):
     if isinstance(token.preceding, (OpenToken, CloseToken)):
         return token.data
-    return super(token.__class__, token).__unicode__()
 
 
 

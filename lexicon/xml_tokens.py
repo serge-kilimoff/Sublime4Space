@@ -9,6 +9,7 @@ from indent_tokens import OpenToken, CloseToken, BlockToken, InlineToken, Whites
 
 __author__ = "Serge Kilimoff-Goriatchkine"
 __email__ = "serge.kilimoff@gmail.com"
+__license__ = 'MIT license'
 
 
 ############################################################################
@@ -17,7 +18,7 @@ __email__ = "serge.kilimoff@gmail.com"
 def serialize_open_tag(token):
     if isinstance(token.preceding, TextToken):
         return token.data
-    return super(token.__class__, token).__unicode__()
+    # return super(token.__class__, token).__unicode__()
 
 
 def serialize_close_tag(token):
@@ -25,13 +26,13 @@ def serialize_close_tag(token):
         return token.data
     if isinstance(token.preceding, TextToken):
         return token.data
-    return super(token.__class__, token).__unicode__()
+    # return super(token.__class__, token).__unicode__()
 
 
 def serialize_text(token):
     if isinstance(token.preceding, (OpenToken, CloseToken)):
         return token.data
-    return super(token.__class__, token).__unicode__()
+    # return super(token.__class__, token).__unicode__()
 
 
 
