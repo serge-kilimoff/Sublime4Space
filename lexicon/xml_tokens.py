@@ -5,7 +5,7 @@ DOC
 """
 from __future__ import unicode_literals, print_function, division
 
-from indent_tokens import OpenToken, CloseToken, BlockToken, InlineToken, WhitespaceToken, TextToken
+from tokens import OpenToken, CloseToken, BlockToken, InlineToken, WhitespaceToken, TextToken
 
 __author__ = "Serge Kilimoff-Goriatchkine"
 __email__ = "serge.kilimoff@gmail.com"
@@ -18,7 +18,6 @@ __license__ = 'MIT license'
 def serialize_open_tag(token):
     if isinstance(token.preceding, TextToken):
         return token.data
-    # return super(token.__class__, token).__unicode__()
 
 
 def serialize_close_tag(token):
@@ -26,13 +25,11 @@ def serialize_close_tag(token):
         return token.data
     if isinstance(token.preceding, TextToken):
         return token.data
-    # return super(token.__class__, token).__unicode__()
 
 
 def serialize_text(token):
     if isinstance(token.preceding, (OpenToken, CloseToken)):
         return token.data
-    # return super(token.__class__, token).__unicode__()
 
 
 

@@ -163,7 +163,7 @@ class InlineToken(BlockToken):
 class WhitespaceToken(BlockToken):
     def __unicode__(self):
         breaklines = '\n' * (self.data.count("\n") - 1)
-        return breaklines + self.indentation
+        return breaklines
 
 
 
@@ -195,5 +195,4 @@ def subclassing_from_grammar(cls, grammar_rule):
     cls_name = '%s__with_rule_%s' % (cls.__name__, grammar_rule.__name__)
     cls_dict = dict(**cls.__dict__)
     cls_dict['__unicode__'] = wrap__unicode__
-    print(wrap__unicode__)
     return type(cls_name.encode('utf-8'), (cls,), cls_dict)

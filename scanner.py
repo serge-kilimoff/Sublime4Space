@@ -5,7 +5,7 @@ DOC
 """
 from __future__ import unicode_literals, print_function, division
 import re
-from indent_tokens import RootToken, TextToken, subclassing_from_grammar
+from tokens import RootToken, TextToken, subclassing_from_grammar
 
 __author__ = "Serge Kilimoff-Goriatchkine"
 __email__ = "serge.kilimoff@gmail.com"
@@ -84,25 +84,6 @@ class Scanner(object):
         self.text_node = text_node
 
 
-    # def subclassing_from_grammar(self, cls, grammar_rule):
-    #     """
-    #     Crée dynamiquement une nouvelle classe par héritage de la classe `cls`.
-    #     Sa propriété __unicode__ sera surchargé par `grammar_rule`.
-
-    #     PARAMETERS
-    #     ==========
-    #     cls : Token
-    #         Une classe ayant les propriétés de la classe `Token`.
-
-    #     grammar_rule : callable
-    #         Une fonction. Elle devra avoir en argument le mot clé `self` car elle sera une méthode d'instance.
-    #     """
-    #     cls_name = '%s__with_rule_%s' % (cls.__name__, grammar_rule.__name__)
-    #     cls_dict = dict(**cls.__dict__)
-    #     cls_dict['__unicode__'] = grammar_rule
-    #     return type(cls_name.encode('utf-8'), (cls,), cls_dict)
-
-
     def parse(self, string):
         """
         Tokenise `string`. Cette tokenisation prendra la forme d'une liste simple de Token.
@@ -165,18 +146,7 @@ class Scanner(object):
         return root
 
 
-    def serialize(self, token, strings=None):
-        if not strings:
-            strings = list()
-        self._serialize(token, strings)
-        return ''.join(strings)
-
-    def _serialize(self, token, strings):
-        strings.append(unicode(token))
-        for child in token.children:
-            self._serialize(child, strings)
-
-    def serialize2(self, token, indentation=None):
+    def serialize(self, token, indentation=None):
         """
         Transforme `token` et les Token qui le suivent dans la chaine en une chaine de caractère.
 
@@ -216,4 +186,4 @@ class Scanner(object):
         """
         tokens = self.parse(string)
         root = self.construct_tree(tokens)
-        return self.serialize2(root, indentation)
+        return self.serialize(root, indentation)
